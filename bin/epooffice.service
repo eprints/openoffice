@@ -1,0 +1,100 @@
+#!/usr/bin/perl -T -w
+
+my $user = "eprints";
+my $group = "eprints";
+my $prefix = "/opt/eprints3";
+
+######################################################################
+#
+# chkconfig: - 85 15
+# description: Start the openoffice for eprints coversheets
+#
+######################################################################
+#
+#
+######################################################################
+
+use English;
+use POSIX;
+use File::Basename;
+
+use strict;
+
+if( $REAL_USER_ID != 0 )
+{
+        print "This script is intended to start openoffice as a service for use by eprints coversheets bazaar package.\nIt should only be run as root.\nExiting.\n";
+        exit 1;
+}
+if( !defined $ARGV[0] || $ARGV[0] !~ m/^(start|stop)$/ )
+{
+        print "Usage: $0 {start|stop}\n";
+        exit 1;
+}
+my $opt = $1;
+my $ooffice_cmd = dirname(__FILE__)."/openoffice-local.pl";
+
+# These are not going via Platform, but this is a UNIX script, so meh.
+my $uid = (getpwnam($user))[2];
+my $gid = (getgrnam($group))[2];
+my @sgroups = ($gid); # gid + supplementary groups
+while(my( undef, undef, $gid, $members ) = getgrent())
+{
+        push @sgroups, $gid if $members =~ /\b$user\b/;
+}
+
+$REAL_GROUP_ID = $EFFECTIVE_GROUP_ID = "@sgroups";
+$REAL_USER_ID = $EFFECTIVE_USER_ID = $uid;
+
+$| = 0;
+if( $opt eq 'start' )
+{
+        print 'Starting OpenOffice: ';
+}
+if( $opt eq 'stop' )
+{
+        print 'Stopping OpenOffice: ';
+}
+delete $ENV{'PATH'};
+my $rv = system( $ooffice_cmd, $opt );
+$rv = $rv >> 8;
+if( $opt eq 'start' || $opt eq 'stop' )
+{
+        if( $rv == 0 )
+        {
+                print '                                 [  OK  ]'."\n";
+        }
+        else
+        {
+                print '                                 [FAILED]'."\n";
+        }
+}
+
+exit $rv;
+
+=head1 COPYRIGHT
+
+=for COPYRIGHT BEGIN
+
+Copyright 2000-2021 University of Southampton.
+
+=for COPYRIGHT END
+
+=for LICENSE BEGIN
+
+This file is part of EPrints L<http://www.eprints.org/>.
+
+EPrints is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+EPrints is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+License for more details.
+
+You should have received a copy of the GNU General Public License
+along with EPrints.  If not, see L<http://www.gnu.org/licenses/>.
+
+=for LICENSE END
+

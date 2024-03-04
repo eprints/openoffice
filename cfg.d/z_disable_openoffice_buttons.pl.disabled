@@ -1,0 +1,8 @@
+# Indexer
+$c->{plugins}->{"Screen::Admin::IndexerControl"}->{actions}->{start_indexer}->{disable} = 1;
+$c->{plugins}->{"Screen::Admin::IndexerControl"}->{actions}->{force_start_indexer}->{disable} = 1;
+$c->{plugins}->{"Screen::Admin::IndexerControl"}->{actions}->{stop_indexer}->{disable} = 1;
+
+# OpenOffice
+$c->{plugins}->{"Screen::Admin::OpenOfficeControl"}->{actions}->{start}->{disable} = 1;
+$c->{plugins}->{"Screen::Admin::OpenOfficeControl"}->{actions}->{stop}->{disable} = 1;
