@@ -10,7 +10,7 @@ This ingredient is based on the [original Coversheets Bazaar plugin](https://baz
 
 ```yum install libreoffice-base libreoffice-writer```
 
-```apt install libreoffice-base librooffice-writter```
+```apt install libreoffice-base libreoffice-writter```
 
 2. Install `unoconv` Python library.  If you have are running a modern version of Linux this should be available via the package manager. E.g.
 
@@ -21,6 +21,8 @@ This ingredient is based on the [original Coversheets Bazaar plugin](https://baz
 If it is not, then install as the root user using Python's `pip` installer. (You may need to use `pip3` rather than `pip`).
 
 ```pip install unoconv```
+
+If you have to install from `pip` you will need to update the `unoconv` invocation in `cfg.d/openoffice.pl` and possibly the `python` executable to make sure it uses Python v3.
 
 3. As the eprints user, checkout this ingredient to EPrints' `ingredients/` directory.
 
